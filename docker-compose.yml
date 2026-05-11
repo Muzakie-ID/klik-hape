@@ -9,7 +9,7 @@ services:
     container_name: klik-hape-app
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "8899:80"
     environment:
       - APP_ENV=production
       - APP_DEBUG=false
