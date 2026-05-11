@@ -32,18 +32,17 @@ class ProductController extends Controller
         $filename = Str::uuid() . '.webp';
         $path = 'products/' . $filename;
 
-        // Buat instance image dari file yang diupload
-        $image = Image::make($file->getRealPath());
+        // Baca image dari file yang diupload (Intervention Image v4 API)
+        $image = Image::read($file->getRealPath());
 
         // Resize gambar jika ukurannya terlalu besar (Maksimal lebar/tinggi 1200px)
         // Aspect ratio akan tetap dipertahankan
-        $image->resize(1200, 1200, function ($constraint) {
+        $image->resizeDown(1200, 1200, function ($constraint) {
             $constraint->aspectRatio();
-            $constraint->upsize();
         });
 
         // Simpan gambar dalam format webp dengan kualitas 80%
-        $image->encode('webp', 80)->save(Storage::disk('public')->path($path));
+        $image->toWebp(80)->save(Storage::disk('public')->path($path));
 
         return $path;
     }
