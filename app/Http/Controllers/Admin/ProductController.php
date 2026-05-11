@@ -33,14 +33,17 @@ class ProductController extends Controller
         $path = 'products/' . $filename;
 
         // Buat instance image dari file yang diupload
-        $image = Image::read($file);
+        $image = Image::read($file->getRealPath());
 
         // Resize gambar jika ukurannya terlalu besar (Maksimal lebar/tinggi 1200px)
         // Aspect ratio akan tetap dipertahankan
-        $image->scaleDown(width: 1200, height: 1200);
+        $image->resize(1200, 1200, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
 
         // Simpan gambar dalam format webp dengan kualitas 80%
-        Storage::disk('public')->put($path, $image->toWebp(80)->toString());
+        $image->toWebp(80)->save(Storage::disk('public')->path($path));
 
         return $path;
     }
