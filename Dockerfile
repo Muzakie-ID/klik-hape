@@ -49,4 +49,5 @@ RUN php artisan storage:link || true
 
 # Set appropriate permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+RUN echo "upload_max_filesize = 100M" > /usr/local/etc/php/conf.d/custom.ini && echo "post_max_size = 100M" >> /usr/local/etc/php/conf.d/custom.ini
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache

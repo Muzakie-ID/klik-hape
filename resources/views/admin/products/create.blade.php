@@ -79,7 +79,7 @@
                             <div class="md:col-span-2">
                                 <x-input-label for="images" value="Foto Produk (Bisa pilih lebih dari satu)" />
                                 <input type="file" id="images" name="images[]" multiple accept="image/*" class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none">
-                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, WEBP. Maks 2MB per foto. Foto pertama yang dipilih akan jadi foto utama (Cover).</p>
+                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, WEBP. Maks 100MB per foto. Foto pertama yang dipilih akan jadi foto utama (Cover).</p>
 
                                 @if($errors->has('images'))
                                     <p class="text-sm text-red-600 mt-2">{{ is_array($errors->get('images')) ? implode(', ', $errors->get('images')) : $errors->get('images') }}</p>
