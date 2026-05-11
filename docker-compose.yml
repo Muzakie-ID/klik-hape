@@ -11,12 +11,12 @@ services:
     ports:
       - "8899:80"
     environment:
-      - APP_ENV=production
-      - APP_DEBUG=false
+      - APP_ENV=local
+      - APP_DEBUG=true
       - APP_KEY=${APP_KEY}
       - APP_URL=${APP_URL}
       - DB_CONNECTION=mysql
-      - DB_HOST=db_master_shared # Merujuk ke nama container/network MySQL eksternal Anda
+      - DB_HOST=mysql_db # Merujuk ke nama container/network MySQL eksternal Anda
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE:-klik_hape}
       - DB_USERNAME=${DB_USERNAME}
