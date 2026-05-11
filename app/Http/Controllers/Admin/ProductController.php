@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\WebpEncoder;
 
 class ProductController extends Controller
 {
@@ -34,7 +35,7 @@ class ProductController extends Controller
 
         // Buat instance ImageManager dengan GD driver (Intervention Image v4 API)
         $manager = new ImageManager(new Driver());
-        $image = $manager->read($file->getRealPath());
+        $image = $manager->decodePath($file->getRealPath());
 
         // Resize jika terlalu besar (max 1200px)
         $image->resize(1200, 1200, function ($constraint) {
@@ -42,7 +43,7 @@ class ProductController extends Controller
         });
 
         // Simpan sebagai webp kualitas 80%
-        $image->toWebp(80)->save(Storage::disk('public')->path($path));
+        $image->encode(new WebpEncoder(80))->save(Storage::disk('public')->path($path));
 
         return $path;
     }
