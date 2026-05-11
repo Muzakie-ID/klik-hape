@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: klik-hape-app
+    container_name: klik-hape-app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=${APP_KEY}
+      - APP_URL=${APP_URL}
+      - DB_CONNECTION=mysql
+      - DB_HOST=db_master_shared # Merujuk ke nama container/network MySQL eksternal Anda
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-klik_hape}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - WAHA_ENABLED=true
+      - WAHA_BASE_URL=https://waha.muzakie.my.id
+      - WAHA_SESSION_NAME=default
+      - WAHA_API_KEY=admin
+    volumes:
+      - ./storage/app/public:/var/www/html/storage/app/public
+    networks:
+      - default
+      - db_network # Network eksternal untuk terhubung ke MySQL
+
+networks:
+  default:
+  db_network:
+    external: true
+    name: db_master_shared # Nama jaringan eksternal MySQL Anda
