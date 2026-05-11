@@ -85,6 +85,43 @@ WAHA_SESSION_NAME=default
 WAHA_API_KEY=rahasia
 ```
 
+## Panduan Perintah Docker (Cheatsheet)
+
+Berikut adalah beberapa perintah berguna untuk mengelola aplikasi di dalam container Docker:
+
+**1. Masuk & Menjalankan Perintah (Exec)**
+Untuk mengeksekusi perintah (seperti artisan atau composer) di dalam container, gunakan `docker compose exec`:
+```bash
+# Migrasi database
+docker compose exec app php artisan migrate
+
+# Install atau update package composer
+docker compose exec app composer install
+
+# Masuk ke dalam terminal container (bash)
+docker compose exec app bash
+```
+
+**2. Memperbaiki Perizinan (Permissions)**
+Jika saat aplikasi berjalan terdapat *error permission denied* pada saat upload file gambar, penulisan log, atau *asset* (CSS/JS) terblokir, Anda bisa menjalankan perintah perbaikan kepemilikan dan hak akses (khususnya untuk folder *storage*, *bootstrap/cache*, dll):
+```bash
+docker compose exec app chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/build
+docker compose exec app chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public/build
+```
+
+**3. Membersihkan Cache (Clear Cache)**
+Seringkali setelah mengubah file `.env` atau *views*, perubahan tidak langsung terlihat di *production*. Bersihkan *cache* aplikasi dengan:
+```bash
+docker compose exec app php artisan optimize:clear
+```
+*(Perintah di atas akan menghapus cache config, route, view, dan cache aplikasi secara bersamaan).*
+
+**4. Melihat Log Error Container**
+Jika terdapat error 500 dan ingin melihat *live log* dari *container*:
+```bash
+docker compose logs -f app
+```
+
 ## Lisensi
 
 Proyek ini dibuat khusus untuk keperluan internal bisnis **Klik Hape**.
