@@ -34,7 +34,7 @@
     <div class="max-w-md mx-auto min-h-screen bg-white relative shadow-2xl overflow-hidden">
 
         <!-- Navbar / Header Atas -->
-        <header class="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm px-4 py-3 flex items-center justify-between">
+        <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm px-4 py-3 flex items-center justify-between mx-auto max-w-[480px]">
             <a href="{{ route('home') }}" class="flex items-center gap-2">
                 <!-- Logo Bawaan -->
                 <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
@@ -90,7 +90,7 @@
         </div>
 
         <!-- Konten Halaman (Index / Show akan masuk ke sini) -->
-        <main class="pb-24">
+        <main class="pb-24 pt-[72px]">
             @yield('content')
         </main>
 
