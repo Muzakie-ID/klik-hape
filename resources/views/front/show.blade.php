@@ -23,14 +23,20 @@
     @endif
 
     <!-- Slider Galeri Foto (Alpine.js) -->
-    <div x-data="{ activeSlide: 0 }" class="relative bg-gray-100 aspect-[4/5] w-full">
+    <div x-data="{ activeSlide: 0 }" class="relative bg-gray-100 aspect-[4/3] w-full">
         @if($product->media->count() > 0)
             <!-- Kontainer Scroll -->
             <div class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar h-full w-full"
                  @scroll="activeSlide = Math.round($event.target.scrollLeft / $event.target.clientWidth)">
                 @foreach($product->media as $index => $media)
-                    <div class="flex-none w-full h-full snap-center relative">
-                        <img src="{{ Storage::url($media->file_path) }}" alt="{{ $product->name }} - {{ $index + 1 }}" class="w-full h-full object-cover">
+                    <div class="flex-none w-full h-full snap-center relative overflow-hidden bg-gray-100">
+                        <!-- Canvas background -->
+                        <img src="{{ Storage::url($media->file_path) }}" alt="{{ $product->name }} - {{ $index + 1 }} background" class="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-25">
+
+                        <!-- Main image: always fully visible, no distortion -->
+                        <div class="relative z-10 w-full h-full flex items-center justify-center p-2">
+                            <img src="{{ Storage::url($media->file_path) }}" alt="{{ $product->name }} - {{ $index + 1 }}" class="max-w-full max-h-full object-contain">
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -52,7 +58,7 @@
     </div>
 
     <!-- Info Utama Produk -->
-    <div class="p-5 bg-white mb-2 shadow-sm">
+    <div class="p-4 bg-white mb-2 shadow-sm">
         <div class="flex justify-between items-start gap-4 mb-2">
             <h1 class="text-xl font-bold text-gray-900 leading-tight">{{ $product->name }}</h1>
             <!-- Badge Stok -->
@@ -73,14 +79,14 @@
     </div>
 
     <!-- Deskripsi Produk -->
-    <div class="p-5 bg-white shadow-sm mb-2">
-        <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+    <div class="p-4 bg-white shadow-sm mb-2">
+        <h3 class="text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             Deskripsi Produk
         </h3>
-        <div class="prose prose-sm text-gray-700 leading-relaxed max-w-none">
+        <div class="prose prose-sm text-gray-700 leading-relaxed max-w-none line-clamp-5">
             {!! nl2br(e($product->description)) !!}
         </div>
     </div>
