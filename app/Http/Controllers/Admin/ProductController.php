@@ -157,31 +157,85 @@ class ProductController extends Controller
             }
         }
 
-        $broadcastCount = 0;
+        $readyBroadcastCount = 0;
+        $outOfStockBroadcastCount = 0;
+
+        // 1) Saat stok habis (dari >0 jadi 0), kabari pelanggan bahwa stok habis lagi
+        if ($oldStock > 0 && $newStock == 0 && $validated['status'] == 'published') {
+            $alreadyNotifiedList = Waitlist::where('product_id', $product->id)
+                ->where('is_notified', true)
+                ->get();
+
+            $outOfStockBroadcastCount = $alreadyNotifiedList->count();
+
+            foreach ($alreadyNotifiedList as $waitlist) {
+                $message = "Halo Kak *{$waitlist->customer_name}*! 👋\n\n";
+                $message .= "Update untuk *{$product->name}*: saat ini stoknya sedang *habis* lagi ya Kak.\n";
+                $message .= "Tenang, Kakak tetap kami simpan di antrean prioritas.\n";
+                $message .= "Begitu stok masuk lagi, kami kabari otomatis di WA ini. 🙏";
+
+                try {
+                    $this->wahaService->sendText($waitlist->wa_number, $message);
+                    sleep(1);
+                } catch (\Throwable $e) {
+                    Log::error('Gagal kirim WA stok habis', [
+                        'waitlist_id' => $waitlist->id,
+                        'product_id' => $product->id,
+                        'error' => $e->getMessage(),
+                    ]);
+                }
+            }
+
+            // Reset flag agar saat restock berikutnya sistem bisa kirim notifikasi READY lagi
+            Waitlist::where('product_id', $product->id)
+                ->where('is_notified', true)
+                ->update([
+                    'is_notified' => false,
+                    'notified_at' => null,
+                ]);
+        }
+
+        // 2) Saat restock (dari 0 jadi >0), kirim notifikasi READY ke antrean aktif
         if ($oldStock == 0 && $newStock > 0 && $validated['status'] == 'published') {
             $waitingList = Waitlist::where('product_id', $product->id)
-                                 ->where('is_notified', false)->get();
-            $broadcastCount = $waitingList->count();
-            if ($broadcastCount > 0) {
-                foreach ($waitingList as $waitlist) {
-                    $message = "Halo Kak *{$waitlist->customer_name}*! 🎉\n\n";
-                    $message .= "Kabar gembira! HP *{$product->name}* yang Kakak tunggu-tunggu sekarang sudah *READY STOCK* lho!\n\n";
-                    $message .= "Cek detail lengkapnya di sini:\n" . route('product.show', $product->slug) . "\n\n";
-                    if ($product->shopee_link) {
-                        $message .= "Atau via Shopee:\n{$product->shopee_link}\n\n";
-                    }
-                    $message .= "Terima kasih! 😊";
+                ->where('is_notified', false)
+                ->get();
+
+            $readyBroadcastCount = $waitingList->count();
+
+            foreach ($waitingList as $waitlist) {
+                $message = "Halo Kak *{$waitlist->customer_name}*! 🎉\n\n";
+                $message .= "Kabar gembira! HP *{$product->name}* yang Kakak tunggu-tunggu sekarang sudah *READY STOCK* lho!\n\n";
+                $message .= "Cek detail lengkapnya di sini:\n" . route('product.show', $product->slug) . "\n\n";
+                if ($product->shopee_link) {
+                    $message .= "Bisa langsung checkout di Shopee ya Kak:\n{$product->shopee_link}\n\n";
+                } else {
+                    $message .= "Untuk checkout, bisa langsung chat admin lewat link produk di atas ya Kak.\n\n";
+                }
+                $message .= "Terima kasih! 😊";
+
+                try {
                     $this->wahaService->sendText($waitlist->wa_number, $message);
                     $waitlist->update(['is_notified' => true, 'notified_at' => now()]);
                     sleep(1);
+                } catch (\Throwable $e) {
+                    Log::error('Gagal kirim WA restock', [
+                        'waitlist_id' => $waitlist->id,
+                        'product_id' => $product->id,
+                        'error' => $e->getMessage(),
+                    ]);
                 }
             }
         }
 
         $msg = 'Produk berhasil diperbarui!';
-        if ($broadcastCount > 0) {
-            $msg .= " WA Blast ke {$broadcastCount} orang.";
+        if ($outOfStockBroadcastCount > 0) {
+            $msg .= " Notif stok habis terkirim ke {$outOfStockBroadcastCount} orang.";
         }
+        if ($readyBroadcastCount > 0) {
+            $msg .= " WA Blast restock ke {$readyBroadcastCount} orang.";
+        }
+
         return redirect()->route('admin.products.index')->with('success', $msg);
     }
 

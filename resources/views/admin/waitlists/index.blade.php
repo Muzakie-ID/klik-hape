@@ -10,7 +10,7 @@
 
             <div class="mb-4 flex flex-col sm:flex-row gap-4 justify-between items-center">
                 <p class="text-sm text-gray-600">
-                    Ini adalah daftar orang-orang yang mengklik "Ingatkan Saya". Saat Anda update stok produk jadi Ready, sistem akan otomatis nge-blast WA ke mereka yang statusnya "Belum Dikabari".
+                    Ini adalah daftar orang-orang yang mengklik "Ingatkan Saya". Sistem akan kirim WA saat stok ready, dan jika stok habis lalu ready lagi, sistem akan kirim notifikasi ulang secara otomatis.
                 </p>
             </div>
 
