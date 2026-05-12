@@ -28,8 +28,8 @@ class StoreProductRequest extends FormRequest
             'stock' => ['required', 'integer', 'min:0'],
             'status' => ['required', 'in:draft,published'],
             'description' => ['nullable', 'string'],
-            'images' => ['nullable', 'array'],
-            'images.*' => ['image', 'mimes:jpeg,png,jpg,webp,heic', 'max:102400'], // Increased max size to 100MB
+            'images' => ['nullable', 'array', 'max:10'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,webp,heic', 'max:10240'], // Max 10MB per foto
         ];
     }
 }

@@ -12,6 +12,7 @@ use App\Services\WahaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\Encoders\WebpEncoder;
@@ -83,15 +84,26 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $path = $this->processAndStoreImage($image);
-                ProductMedia::create([
+            try {
+                foreach ($request->file('images') as $index => $image) {
+                    $path = $this->processAndStoreImage($image);
+                    ProductMedia::create([
+                        'product_id' => $product->id,
+                        'file_path' => $path,
+                        'media_type' => 'image',
+                        'is_primary' => $index === 0 ? true : false,
+                        'sort_order' => $index,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                Log::error('Gagal memproses upload gambar produk (store)', [
                     'product_id' => $product->id,
-                    'file_path' => $path,
-                    'media_type' => 'image',
-                    'is_primary' => $index === 0 ? true : false,
-                    'sort_order' => $index,
+                    'error' => $e->getMessage(),
                 ]);
+
+                return back()
+                    ->withInput()
+                    ->withErrors(['images' => 'Upload gambar gagal diproses. Pastikan ukuran tiap foto maksimal 10MB dan coba kurangi jumlah foto dalam sekali upload.']);
             }
         }
 
@@ -120,17 +132,28 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('images')) {
-            $hasPrimary = $product->media()->where('is_primary', true)->exists();
-            $currentMaxOrder = $product->media()->max('sort_order') ?? -1;
-            foreach ($request->file('images') as $index => $image) {
-                $path = $this->processAndStoreImage($image);
-                ProductMedia::create([
+            try {
+                $hasPrimary = $product->media()->where('is_primary', true)->exists();
+                $currentMaxOrder = $product->media()->max('sort_order') ?? -1;
+                foreach ($request->file('images') as $index => $image) {
+                    $path = $this->processAndStoreImage($image);
+                    ProductMedia::create([
+                        'product_id' => $product->id,
+                        'file_path' => $path,
+                        'media_type' => 'image',
+                        'is_primary' => (!$hasPrimary && $index === 0) ? true : false,
+                        'sort_order' => $currentMaxOrder + $index + 1,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                Log::error('Gagal memproses upload gambar produk (update)', [
                     'product_id' => $product->id,
-                    'file_path' => $path,
-                    'media_type' => 'image',
-                    'is_primary' => (!$hasPrimary && $index === 0) ? true : false,
-                    'sort_order' => $currentMaxOrder + $index + 1,
+                    'error' => $e->getMessage(),
                 ]);
+
+                return back()
+                    ->withInput()
+                    ->withErrors(['images' => 'Upload gambar gagal diproses. Pastikan ukuran tiap foto maksimal 10MB dan coba kurangi jumlah foto dalam sekali upload.']);
             }
         }
 

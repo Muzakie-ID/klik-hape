@@ -91,7 +91,7 @@
                                     <div class="md:col-span-2 p-4 bg-gray-50 border border-dashed border-gray-300 rounded-lg">
                                         <x-input-label for="images" value="Tambah Foto Produk Baru" />
                                         <input type="file" id="images" name="images[]" multiple accept="image/*,.heic" class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-white focus:outline-none p-1">
-                                        <p class="text-xs text-gray-500 mt-1">Biarkan kosong jika tidak ingin menambah foto.</p>
+                                        <p class="text-xs text-gray-500 mt-1">Biarkan kosong jika tidak ingin menambah foto. Maks 10MB per foto, maksimal 10 foto per upload.</p>
 
                                         @if($errors->has('images'))
                                             <p class="text-sm text-red-600 mt-2">{{ is_array($errors->get('images')) ? implode(', ', $errors->get('images')) : $errors->get('images') }}</p>
