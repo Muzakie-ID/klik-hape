@@ -18,8 +18,6 @@
         <a href="{{ route('home') }}" class="whitespace-nowrap px-4 py-1.5 {{ !request('filter') ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 border border-gray-200' }} text-xs font-semibold rounded-full transition">Semua</a>
         <a href="{{ route('home', ['filter' => 'ready']) }}" class="whitespace-nowrap px-4 py-1.5 {{ request('filter') == 'ready' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 border border-gray-200' }} text-xs font-semibold rounded-full transition">Ready Stock</a>
         <a href="{{ route('home', ['filter' => 'po']) }}" class="whitespace-nowrap px-4 py-1.5 {{ request('filter') == 'po' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 border border-gray-200' }} text-xs font-semibold rounded-full transition">Pre-Order</a>
-        <a href="{{ route('home', ['filter' => 'iphone']) }}" class="whitespace-nowrap px-4 py-1.5 {{ request('filter') == 'iphone' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 border border-gray-200' }} text-xs font-semibold rounded-full transition">iPhone</a>
-        <a href="{{ route('home', ['filter' => 'android']) }}" class="whitespace-nowrap px-4 py-1.5 {{ request('filter') == 'android' ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 border border-gray-200' }} text-xs font-semibold rounded-full transition">Android</a>
     </div>
 
     <!-- Info Hasil Pencarian -->
