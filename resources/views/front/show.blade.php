@@ -2,8 +2,8 @@
 
 @section('content')
 
-    <!-- Tombol Back Melayang -->
-    <a href="{{ route('home') }}" class="absolute top-4 left-4 z-10 w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center shadow-md text-gray-800 hover:bg-white transition">
+    <!-- Tombol Back Melayang (tetap di layar saat scroll) -->
+    <a href="{{ route('home') }}" class="fixed top-[84px] left-4 z-40 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-md text-gray-800 hover:bg-white transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -11,7 +11,7 @@
 
     <!-- Alert Success Waitlist (Jika ada) -->
     @if(session('waitlist_success'))
-        <div x-data="{ show: true }" x-show="show" class="absolute top-16 left-4 right-4 z-20 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex justify-between items-start">
+        <div x-data="{ show: true }" x-show="show" class="fixed top-[84px] left-4 right-4 z-40 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg shadow-lg flex justify-between items-start max-w-md mx-auto">
             <div>
                 <strong class="font-bold text-sm">Pesan Masuk!</strong>
                 <span class="block sm:inline text-sm mt-1">{{ session('waitlist_success') }}</span>
