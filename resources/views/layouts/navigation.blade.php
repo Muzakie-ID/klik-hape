@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 hidden sm:block">
+<nav x-data="{ open: false }" class="bg-white border-b border-gray-100 hidden sm:block sticky top-0 z-50">
     <!-- Primary Navigation Menu (Versi Desktop - Hanya tampil di sm ke atas) -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
