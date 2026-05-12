@@ -38,10 +38,9 @@ class ProductController extends Controller
         $manager = new ImageManager(new Driver());
         $image = $manager->decodePath($file->getRealPath());
 
-        // Resize jika terlalu besar (max 1200px)
-        $image->resize(1200, 1200, function ($constraint) {
-            $constraint->aspectRatio();
-        });
+        // Scale down jika terlalu besar (max 1200px) TANPA merusak rasio
+        // Cocok untuk foto portrait seperti 9:16 agar tidak gepeng.
+        $image->scaleDown(width: 1200, height: 1200);
 
         // Simpan sebagai webp kualitas 80%
         $image->encode(new WebpEncoder(80))->save(Storage::disk('public')->path($path));
