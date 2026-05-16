@@ -152,7 +152,17 @@
                 <div class="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-6"></div>
 
                 <h3 class="text-xl font-bold text-gray-900 mb-1">Daftar Antrean</h3>
-                <p class="text-sm text-gray-500 mb-6">Masukkan nama dan WA. Kami akan hubungi otomatis saat {{ $product->name }} ready stock!</p>
+                <p class="text-sm text-gray-500 mb-4">Masukkan nama dan WA. Kami akan hubungi otomatis saat {{ $product->name }} ready stock!</p>
+
+                <div class="mb-6 rounded-xl border border-indigo-100 bg-indigo-50 p-4">
+                    <p class="text-xs font-semibold text-indigo-800 mb-2">Tata cara agar dapat notifikasi WhatsApp:</p>
+                    <ol class="list-decimal pl-4 space-y-1 text-xs text-indigo-900">
+                        <li>Isi <span class="font-semibold">Nama Panggilan</span> dan <span class="font-semibold">Nomor WhatsApp aktif</span>.</li>
+                        <li>Pastikan nomor WA benar dan bisa menerima chat.</li>
+                        <li>Klik tombol <span class="font-semibold">Kirim & Ingatkan Saya</span>.</li>
+                        <li>Jika stok {{ $product->name }} sudah ready, sistem kami akan kirim notifikasi otomatis ke WhatsApp kamu.</li>
+                    </ol>
+                </div>
 
                 <form action="{{ route('waitlist.store') }}" method="POST" class="space-y-4">
                     @csrf
